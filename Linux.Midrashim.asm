@@ -14,7 +14,7 @@
 ; Payload (non destructive) is a quote from a song and it's encoded for no reason whatsoever.
 ; 
 ; A big thanks for those who keeps the VX scene alive!
-; Feel free to email me: tmz@null.net || || tmz@syscall.sh || thomazi@linux.com
+; Feel free to email me: tmz@null.net || tmz@syscall.sh || thomazi@linux.com
 ; @guitmz || @TMZvx
 ; https://www.guitmz.com
 ; https://syscall.sh
