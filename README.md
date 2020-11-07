@@ -1,5 +1,5 @@
 # Linux.Midrashim
-This is my first x64 ELF infector written in full Assembly. It's contains a non destructive payload and will infect other ELF ([PIE](https://en.wikipedia.org/wiki/Position-independent_code) is also supported) on current directory only and not recursively. It uses `PT_NOTE to PT_LOAD` infection [technique](https://www.symbolcrash.com/2019/03/27/pt_note-to-pt_load-injection-in-elf).
+This is my first x64 ELF infector written in full Assembly. It's contains a non destructive payload and will infect other ELF ([PIE](https://en.wikipedia.org/wiki/Position-independent_code) is also supported) on current directory only and not recursively. It uses `PT_NOTE to PT_LOAD` infection technique.
 
 
 # Build
