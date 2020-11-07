@@ -3,7 +3,7 @@ This is my first x64 ELF infector written in full Assembly. It's contains a non 
 
 
 # Build
-Assemble it with [FASM](https://flatassembler.net).
+Assemble it with [FASM](https://flatassembler.net) x64.
 ```
 $ fasm Linux.Midrashim.asm
 flat assembler  version 1.73.25  (16384 kilobytes memory, x64)
