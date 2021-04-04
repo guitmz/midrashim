@@ -10,6 +10,9 @@
 ;   - stores stuff on memory buffer (r15 register).
 ;   - infects current directory (non recursively).
 ;   - has several parts that could have improved, like detecting first virus execution with a better approach.
+; 
+; Assemble with:
+;       $ fasm Linux.Midrashim.asm
 ;
 ; Payload (non destructive) is a quote from a song and it's encoded for no reason whatsoever.
 ; 
@@ -22,6 +25,7 @@
 ; Use at your own risk, I'm not responsible for any damages that this may cause, do not spread it into the wild!
 ;
 ; References:
+; https://www.guitmz.com/linux-midrashim-elf-virus/
 ; https://www.symbolcrash.com/2019/03/27/pt_note-to-pt_load-injection-in-elf
 ; https://www.wikidata.org/wiki/Q6041496
 ; https://legacyofkain.fandom.com/wiki/Ozar_Midrashim
