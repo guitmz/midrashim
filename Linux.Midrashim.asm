@@ -4,7 +4,7 @@
 ; Finished on 30.05.2020
 ; Released on 07.11.2020
 ; The release was delayed because I was trying to code a fancy 90's style payload and due to lack of time, I'll leave this to another project.
-; This is my first full assembly virus and should be assembled with FASM x64.
+; This is my first full assembly virus and should be assembled with FASM x64 (tested with version 1.73.25 but it should work with more recent too).
 ;   - relies on PT_NOTE -> PT_LOAD infection technique and should work on regular x64 ELF executables (position independent or not).
 ;   - should use mmap but instead it uses pread and pwrite (due to lazyness). 
 ;   - stores stuff on memory buffer (r15 register).
